@@ -2,9 +2,9 @@
   <div class="app-container">
     <!-- header -->
     <mt-header fixed title="黑马程序员-Victor·Vue项目">
-      <router-link to="/" slot="left">  
-            <mt-button icon="back" @click="goBack(-1)">返回</mt-button>  
-          </router-link>  
+      <span  slot="left" @click="goBack" v-show="flag">  
+            <mt-button icon="back" >返回</mt-button>  
+      </span>  
           <!-- <mt-button icon="more" slot="right" @click="more"></mt-button> -->
     </mt-header>
     <!-- container  router -->
@@ -22,7 +22,7 @@
 				<span class="mui-tab-label">会员</span>
 			</router-link>
 			<router-link class="mui-tab-item-z" to="/shopcar">
-				<span class="mui-icon mui-icon-extra mui-icon-extra-cart"><span class="mui-badge">0</span></span>
+				<span class="mui-icon mui-icon-extra mui-icon-extra-cart"><span class="mui-badge" id="badge">{{this.$store.getters.getAllCount}}</span></span>
 				<span class="mui-tab-label">购物车</span>
 			</router-link>
 			<router-link class="mui-tab-item-z" to="/search">
@@ -35,14 +35,30 @@
 </template>
 
 <script>
-
-export default{
-  methods:{
-    goBack(n){
-      this.$router.go(n)
+export default {
+  data() {
+    return {
+      flag: false
+    };
+  },
+  created() {
+    this.flag = this.$route.path === "/home" ? false : true;
+  },
+  methods: {
+    goBack() {
+      this.$router.go(-1);
+    }
+  },
+  watch: {
+    "$route.path": function(newVal) {
+      if (newVal == "/home") {
+        this.flag = false;
+      } else {
+        this.flag = true;
+      }
     }
   }
-}
+};
 </script>
 
 

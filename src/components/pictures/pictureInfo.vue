@@ -9,7 +9,7 @@
 
       <!-- 图区域 -->
       <div class="thumbs">
-      <img class="preview-img" v-for="(item, index) in list" :src="item.src" height="100" @click="$preview.open(index, list)" :key="item.src">
+        <vue-preview :slides="list" @close="handleClose"  height="100" ></vue-preview>
       </div>
       <!-- 图片内容 -->
       <div class="content" v-html="picinfos.content"></div>
@@ -26,7 +26,7 @@ export default {
       id: this.$route.params.id,
       picinfos: {},
       list: []
-    }
+    };
   },
   created() {
     this.getPicInfo();
@@ -48,6 +48,7 @@ export default {
         if (result.body.status === 0) {
           // 循环每个图片数据，补全图片的宽和高
           result.body.message.forEach(item => {
+            item.msrc=item.src;
             item.w = 600;
             item.h = 400;
           });
@@ -55,11 +56,14 @@ export default {
           this.list = result.body.message;
         }
       });
+    },
+    handleClose() {
+      console.log("close event");
     }
   },
   components: {
-      "cmt": comment
-    }
+    cmt: comment
+  }
 };
 </script>
 <style lang="scss" scoped>
@@ -81,8 +85,10 @@ export default {
     font-size: 13px;
     line-height: 30px;
   }
-  .thumbs{
-    img{
+  .thumbs {
+    img {
+      width: 30px;
+      height: 30px;
       margin: 10px;
       box-shadow: 0 0 8px #999;
     }
